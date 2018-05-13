@@ -13,6 +13,7 @@ import com.shellmonger.apps.mynotes.extensions.afterTextChanged
 import com.shellmonger.apps.mynotes.extensions.set
 import com.shellmonger.apps.mynotes.models.Note
 import com.shellmonger.apps.mynotes.viewmodels.NoteDetailViewModel
+import kotlinx.android.synthetic.main.fragment_note_detail.*
 import kotlinx.android.synthetic.main.fragment_note_detail.view.*
 import org.koin.android.architecture.ext.viewModel
 
@@ -23,12 +24,33 @@ class NoteDetailFragment : Fragment() {
     }
 
     private val viewModel by viewModel<NoteDetailViewModel>()
+    private val observer = Observer<Note> {
+        it?.let {
+            detail_id_field.text = it.noteId
+            detail_title_editor.text.set(it.title)
+            detail_content_editor.text.set(it.content)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             if (it.containsKey(ARG_NOTE)) viewModel.setNoteId(it.getString(ARG_NOTE))
         }
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val rootView = inflater.inflate(R.layout.fragment_note_detail, container, false)
+        rootView.detail_title_editor.afterTextChanged { saveNote() }
+        rootView.detail_content_editor.afterTextChanged { saveNote() }
+        return rootView
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        viewModel.currentNote.removeObserver(observer)
+        viewModel.currentNote.observe(this, observer)
     }
 
     private fun saveNote() {
@@ -38,21 +60,5 @@ class NoteDetailFragment : Fragment() {
             content = view?.detail_content_editor?.text.toString()
         }
         viewModel.saveNote(currentNote)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_note_detail, container, false)
-        viewModel.currentNote.observe(this, Observer {
-            it?.let {
-                rootView.detail_id_field.text = it.noteId
-                rootView.detail_title_editor.text.set(it.title)
-                rootView.detail_content_editor.text.set(it.content)
-            }
-        })
-
-        rootView.detail_title_editor.afterTextChanged { saveNote() }
-        rootView.detail_content_editor.afterTextChanged { saveNote() }
-
-        return rootView
     }
 }
