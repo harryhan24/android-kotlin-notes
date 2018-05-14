@@ -1,9 +1,12 @@
 package com.shellmonger.apps.mynotes.ui
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import com.shellmonger.apps.mynotes.R
+import kotlinx.android.synthetic.main.activity_note_detail.*
 
 class NoteDetailActivity : AppCompatActivity() {
     companion object {
@@ -14,6 +17,8 @@ class NoteDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_note_detail)
+        setSupportActionBar(note_detail_toolbar)
+        supportActionBar?.apply { setDisplayHomeAsUpEnabled(true) }
 
         if (intent?.extras?.containsKey(ARG_NOTE) == true) {
             val noteId = intent.extras.getString(ARG_NOTE)
@@ -22,6 +27,12 @@ class NoteDetailActivity : AppCompatActivity() {
             loadFragment(null)
         }
     }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean
+        = when(item?.itemId) {
+            android.R.id.home -> navigateUpTo(Intent(this, NoteListActivity::class.java))
+            else -> super.onOptionsItemSelected(item)
+        }
 
     private fun loadFragment(noteId: String?) {
         Log.d(TAG, "Loading fragment for note $noteId")

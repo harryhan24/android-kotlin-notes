@@ -4,6 +4,7 @@ import android.app.Application
 import com.shellmonger.apps.mynotes.repositories.MockNotesRepository
 import com.shellmonger.apps.mynotes.repositories.NotesRepository
 import com.shellmonger.apps.mynotes.viewmodels.NoteDetailViewModel
+import com.shellmonger.apps.mynotes.viewmodels.NoteListViewModel
 import org.koin.android.architecture.ext.viewModel
 import org.koin.android.ext.android.startKoin
 import org.koin.dsl.module.Module
@@ -18,6 +19,7 @@ class ApplicationWrapper : Application() {
         private val modules : Module = applicationContext {
             bean { MockNotesRepository() as NotesRepository }
             viewModel { NoteDetailViewModel(get()) }
+            viewModel { NoteListViewModel(get()) }
         }
     }
     /**
