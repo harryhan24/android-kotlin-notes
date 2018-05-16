@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="4" by="lint 3.2 Canary 14">
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders.">
+        <location
+            file="src/main/java/com/shellmonger/apps/mynotes/ui/AuthenticatorActivity.kt"
+            line="99"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead.">
+        <location
+            file="src/main/java/com/shellmonger/apps/mynotes/ui/AuthenticatorActivity.kt"
+            line="99"/>
+    </issue>
+
+</issues>

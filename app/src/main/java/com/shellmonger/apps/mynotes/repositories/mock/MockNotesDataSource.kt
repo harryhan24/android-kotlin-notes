@@ -1,4 +1,4 @@
-package com.shellmonger.apps.mynotes.repositories.datasources
+package com.shellmonger.apps.mynotes.repositories.mock
 
 import android.arch.paging.DataSource
 import android.arch.paging.ItemKeyedDataSource

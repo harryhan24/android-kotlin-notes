@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="ic_clear_margin">16dp</dimen>
+    <dimen name="mfa_item_size">48dp</dimen>
+    <dimen name="mfa_item_radius">5dp</dimen>
+    <dimen name="mfa_item_spacing">5dp</dimen>
+    <dimen name="mfa_line_width">2dp</dimen>
+    <dimen name="mfa_cursor_width">2dp</dimen>
 </resources>

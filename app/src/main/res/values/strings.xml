@@ -4,6 +4,27 @@
     <string name="hint_title">Title</string>
     <string name="hint_content">Note Content</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_login">Sign In</string>
+    <string name="action_logout">Sign Out</string>
+    <string name="action_forgot_password">Submit</string>
+    <string name="action_sign_up">Sign Up</string>
+    <string name="action_cancel">Cancel</string>
+
+    <string name="authenticator_title">Sign In</string>
+    <string name="forgot_password_title">Reset Password</string>
+    <string name="sign_up_title">Sign Up</string>
+
+    <string name="hint_username"><i>Email Address</i></string>
+    <string name="hint_password"><i>Password</i></string>
+    <string name="hint_new_password"><i>New Password</i></string>
+    <string name="hint_mfa_prompt">Code</string>
+    <string name="hint_phone">Phone number</string>
+    <string name="hint_name">Name</string>
+
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="authenticator_sign_up_msg">No account? Sign up now!</string>
+    <string name="default_mfa_instructions">Enter the code we just sent to you</string>
+    <string name="specific_mfa_instruction">Enter the code sent via %1$s:%2$s</string>
+    <string name="cancel_contentDescription">Cancel Button</string>
+    <string name="profile_icon_contentDescription">Profile Icon</string>
 </resources>

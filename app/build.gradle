@@ -37,6 +37,7 @@ android {
 }
 
 ext {
+    anko_version = "0.10.4"
     support_version = "27.1.1"
     lifecycle_version = "1.1.1"
     koin_version = "0.9.2"
@@ -44,7 +45,11 @@ ext {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    // Kotlin libraries
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.anko:anko:$anko_version"
+    implementation "org.jetbrains.anko:anko-constraint-layout:$anko_version"
 
     // Android Jet Pack Libraries
     implementation "com.android.support:appcompat-v7:$support_version"

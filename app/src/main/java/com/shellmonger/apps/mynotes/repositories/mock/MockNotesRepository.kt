@@ -1,23 +1,18 @@
-package com.shellmonger.apps.mynotes.repositories
+package com.shellmonger.apps.mynotes.repositories.mock
 
 import android.arch.lifecycle.LiveData
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
-import android.util.Log
 import com.shellmonger.apps.mynotes.models.Note
-import com.shellmonger.apps.mynotes.repositories.datasources.MockNotesDataSourceFactory
+import com.shellmonger.apps.mynotes.repositories.NotesRepository
+import com.shellmonger.apps.mynotes.services.AnalyticsService
 
-class MockNotesRepository : NotesRepository {
-    companion object {
-        private val TAG = this::class.java.simpleName
-    }
-
+class MockNotesRepository(private val analyticsService: AnalyticsService) : NotesRepository {
     private val factory = MockNotesDataSourceFactory()
-
     override val notes: LiveData<PagedList<Note>>
 
     init {
-        Log.d(TAG, "Creating paged list livedata")
+        analyticsService.recordEvent("START_NOTES_REPOSITORY")
         val pagedListConfig = PagedList.Config.Builder()
                 .setEnablePlaceholders(true)
                 .setInitialLoadSizeHint(10)
@@ -30,11 +25,12 @@ class MockNotesRepository : NotesRepository {
             = factory.dataSource.getNoteById(noteId)
 
     override fun saveNote(item: Note) {
+        analyticsService.recordEvent("SAVE_ITEM")
         factory.dataSource.saveItem(item)
     }
 
     override fun deleteNote(item: Note) {
+        analyticsService.recordEvent("DELETE_ITEM")
         factory.dataSource.deleteItem(item)
     }
-
 }

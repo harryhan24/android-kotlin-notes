@@ -1,8 +1,13 @@
 package com.shellmonger.apps.mynotes.lifecycle
 
 import android.app.Application
-import com.shellmonger.apps.mynotes.repositories.MockNotesRepository
+import com.shellmonger.apps.mynotes.repositories.mock.MockNotesRepository
 import com.shellmonger.apps.mynotes.repositories.NotesRepository
+import com.shellmonger.apps.mynotes.services.AnalyticsService
+import com.shellmonger.apps.mynotes.services.IdentityService
+import com.shellmonger.apps.mynotes.services.mock.MockAnalyticsService
+import com.shellmonger.apps.mynotes.services.mock.MockIdentityService
+import com.shellmonger.apps.mynotes.viewmodels.AuthenticatorActivityViewModel
 import com.shellmonger.apps.mynotes.viewmodels.NoteDetailViewModel
 import com.shellmonger.apps.mynotes.viewmodels.NoteListViewModel
 import org.koin.android.architecture.ext.viewModel
@@ -16,8 +21,16 @@ import org.koin.dsl.module.applicationContext
  */
 class ApplicationWrapper : Application() {
     companion object {
-        private val modules : Module = applicationContext {
-            bean { MockNotesRepository() as NotesRepository }
+        private val services : Module = applicationContext {
+            bean { MockAnalyticsService() as AnalyticsService }
+            bean { MockIdentityService(get()) as IdentityService }
+        }
+
+        private val repositories : Module = applicationContext {
+            bean { MockNotesRepository(get()) as NotesRepository }
+        }
+        private val viewModels : Module = applicationContext {
+            viewModel { AuthenticatorActivityViewModel(get()) }
             viewModel { NoteDetailViewModel(get()) }
             viewModel { NoteListViewModel(get()) }
         }
@@ -27,6 +40,6 @@ class ApplicationWrapper : Application() {
      */
     override fun onCreate() {
         super.onCreate()
-        startKoin(this, listOf(modules))
+        startKoin(this, listOf(services, repositories, viewModels))
     }
 }
