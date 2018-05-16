@@ -5,6 +5,8 @@ import com.shellmonger.apps.mynotes.repositories.mock.MockNotesRepository
 import com.shellmonger.apps.mynotes.repositories.NotesRepository
 import com.shellmonger.apps.mynotes.services.AnalyticsService
 import com.shellmonger.apps.mynotes.services.IdentityService
+import com.shellmonger.apps.mynotes.services.aws.AWSAnalyticsService
+import com.shellmonger.apps.mynotes.services.aws.AWSIdentityService
 import com.shellmonger.apps.mynotes.services.mock.MockAnalyticsService
 import com.shellmonger.apps.mynotes.services.mock.MockIdentityService
 import com.shellmonger.apps.mynotes.viewmodels.AuthenticatorActivityViewModel
@@ -22,8 +24,11 @@ import org.koin.dsl.module.applicationContext
 class ApplicationWrapper : Application() {
     companion object {
         private val services : Module = applicationContext {
-            bean { MockAnalyticsService() as AnalyticsService }
-            bean { MockIdentityService(get()) as IdentityService }
+//            bean { MockAnalyticsService() as AnalyticsService }
+            bean { AWSAnalyticsService(get()) as AnalyticsService }
+
+//            bean { MockIdentityService(get()) as IdentityService }
+            bean { AWSIdentityService(get()) as IdentityService }
         }
 
         private val repositories : Module = applicationContext {
