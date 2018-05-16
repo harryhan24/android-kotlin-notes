@@ -6,9 +6,9 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
 import com.shellmonger.apps.mynotes.R
-import com.shellmonger.apps.mynotes.adapters.NoteListAdapter
 import com.shellmonger.apps.mynotes.adapters.NotesPagedListAdapter
 import com.shellmonger.apps.mynotes.viewmodels.NoteListViewModel
 import kotlinx.android.synthetic.main.activity_note_list.*
@@ -41,7 +41,11 @@ class NoteListActivity : AppCompatActivity() {
             orientation = LinearLayoutManager.VERTICAL
         }
         note_list_recyclerview.adapter = adapter
-
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteHandler(this) {
+            it.note?.let { viewModel.deleteNote(it) }
+            adapter.notifyItemRemoved(it.adapterPosition)
+        })
+        itemTouchHelper.attachToRecyclerView(note_list_recyclerview)
     }
 
     private fun launchNoteDetailActivity(context: Context, noteId: String? = null) {

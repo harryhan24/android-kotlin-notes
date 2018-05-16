@@ -21,5 +21,4 @@ class NotesPagedListAdapter(val onClick: (Note) -> Unit) : PagedListAdapter<Note
         holder.note = getItem(position)
         holder.view.setOnClickListener { onClick(holder.note!!) }
     }
-
 }

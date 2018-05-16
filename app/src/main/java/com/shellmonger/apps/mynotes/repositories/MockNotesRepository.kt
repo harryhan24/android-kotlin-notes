@@ -33,4 +33,8 @@ class MockNotesRepository : NotesRepository {
         factory.dataSource.saveItem(item)
     }
 
+    override fun deleteNote(item: Note) {
+        factory.dataSource.deleteItem(item)
+    }
+
 }

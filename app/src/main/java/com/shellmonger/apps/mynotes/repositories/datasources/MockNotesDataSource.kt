@@ -39,7 +39,7 @@ class MockNotesDataSource : ItemKeyedDataSource<Int, Note>() {
         val firstItem = inRange(params.requestedInitialKey ?: 0,0, items.size)
         val lastItem = inRange(firstItem + pageSize, 0, items.size)
         Log.d(TAG, "loadInitial: firstItem = $firstItem, lastItem = $lastItem")
-        val data = if (firstItem == lastItem) emptyList<Note>() else items.subList(firstItem, lastItem)
+        val data = if (firstItem == lastItem) emptyList() else items.subList(firstItem, lastItem).toList()
         if (params.placeholdersEnabled) {
             callback.onResult(data, firstItem, items.size)
         } else {
@@ -56,7 +56,7 @@ class MockNotesDataSource : ItemKeyedDataSource<Int, Note>() {
         val firstItem = inRange(params.key + 1, 0, items.size)
         val lastItem = inRange(firstItem + pageSize, 0, items.size)
         Log.d(TAG, "loadAfter: firstItem = $firstItem, lastItem = $lastItem")
-        val data = if (firstItem == lastItem) emptyList<Note>() else items.subList(firstItem, lastItem)
+        val data = if (firstItem == lastItem) emptyList() else items.subList(firstItem, lastItem).toList()
         callback.onResult(data)
     }
 
@@ -69,7 +69,7 @@ class MockNotesDataSource : ItemKeyedDataSource<Int, Note>() {
         val lastItem = inRange(params.key - 1, 0, items.size)
         val firstItem = inRange(lastItem - pageSize, 0, items.size)
         Log.d(TAG, "loadBefore: firstItem = $firstItem, lastItem = $lastItem")
-        val data = if (firstItem == lastItem) emptyList<Note>() else items.subList(firstItem, lastItem)
+        val data = if (firstItem == lastItem) emptyList() else items.subList(firstItem, lastItem).toList()
         callback.onResult(data)
     }
 
@@ -93,6 +93,22 @@ class MockNotesDataSource : ItemKeyedDataSource<Int, Note>() {
         val index = getKey(item)
         if (index < 0) items.add(item) else items[index] = item
         invalidate()        // Tell the system the data has changed
+    }
+
+    /**
+     * delete an item from the list
+     */
+    fun deleteItem(item: Note) {
+        val index = getKey(item)
+        Log.d(TAG, "There are now ${items.size} items (index = $index)")
+        if (index >= 0) {
+            Log.d(TAG, "Deleting item ${item.noteId}")
+            items.removeAt(index)
+            Log.d(TAG, "There are now ${items.size} items")
+            invalidate()
+        } else {
+            Log.d(TAG, "Item ${item.noteId} not found for deletion")
+        }
     }
 }
 

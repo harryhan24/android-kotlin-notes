@@ -10,4 +10,6 @@ interface NotesRepository {
     fun getNoteById(noteId: String): Note?
 
     fun saveNote(item: Note)
+
+    fun deleteNote(item: Note)
 }
