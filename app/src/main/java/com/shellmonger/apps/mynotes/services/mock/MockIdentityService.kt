@@ -3,6 +3,7 @@ package com.shellmonger.apps.mynotes.services.mock
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.content.Context
+import android.util.Log
 import com.shellmonger.apps.mynotes.models.User
 import com.shellmonger.apps.mynotes.services.IdentityHandler
 import com.shellmonger.apps.mynotes.services.IdentityRequest
@@ -18,6 +19,7 @@ data class MockUser(val username: String) {
 
 class MockIdentityService(context: Context): IdentityService {
     companion object {
+        private val TAG = this::class.java.simpleName
         private val DO_NOTHING: (Map<String,String>?) -> Unit = { }
         private val PREFS_FILE: String = "${this::class.java.canonicalName}.PREFS"
         private const val USERNAME_PREF: String = "authenticator-username"
@@ -119,7 +121,8 @@ class MockIdentityService(context: Context): IdentityService {
                         storeNewUserProfile(handler, mockUser.value, parameters)
                         return@handler
                     }
-                else -> // Test the MFA flow
+                else -> { // Test the MFA flow
+                    Log.d(TAG, "MULTIFACTOR: Code = ${mockUser.value.mfaCode}")
                     handler(IdentityRequest.NEED_MULTIFACTORCODE, null) {
                         val mfaResponse = checkNotNull(it) { "Invalid response from NEED_MULTIFACTORCODE" }
                         val mfaCode = mfaResponse["mfaCode"] ?: ""
@@ -130,6 +133,7 @@ class MockIdentityService(context: Context): IdentityService {
                             return@handler
                         }
                     }
+                }
             }
         } catch (exception: Exception) {
             handleFailure(handler, exception.message)
