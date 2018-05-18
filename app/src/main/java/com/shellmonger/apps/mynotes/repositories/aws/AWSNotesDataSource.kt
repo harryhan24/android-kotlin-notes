@@ -218,8 +218,11 @@ class AWSNotesDataSource(context: Context, idService: IdentityService) : PageKey
     }
 }
 
-class AWSNotesDataSourceFactory(context: Context, identityService: IdentityService) : DataSource.Factory<String, Note>() {
-    val dataSource = AWSNotesDataSource(context, identityService)
+class AWSNotesDataSourceFactory(private val context: Context, private val identityService: IdentityService) : DataSource.Factory<String, Note>() {
+    var dataSource: AWSNotesDataSource? = null
 
-    override fun create(): DataSource<String, Note> = dataSource
+    override fun create(): DataSource<String, Note> {
+        dataSource = AWSNotesDataSource(context, identityService)
+        return dataSource as DataSource<String, Note>
+    }
 }

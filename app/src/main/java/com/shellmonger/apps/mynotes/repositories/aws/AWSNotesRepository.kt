@@ -28,16 +28,16 @@ class AWSNotesRepository(
     }
 
     override fun getNoteById(noteId: String, callback: (Note?) -> Unit) {
-        factory.dataSource.getNoteById(noteId, callback)
+        factory.dataSource!!.getNoteById(noteId, callback)
     }
 
     override fun saveNote(item: Note, callback: (Note) -> Unit) {
         analyticsService.recordEvent("SAVE_ITEM")
-        factory.dataSource.saveItem(item, callback)
+        factory.dataSource!!.saveItem(item, callback)
     }
 
     override fun deleteNote(item: Note, callback: () -> Unit) {
         analyticsService.recordEvent("DELETE_ITEM")
-        factory.dataSource.deleteItem(item, callback)
+        factory.dataSource!!.deleteItem(item, callback)
     }
 }
