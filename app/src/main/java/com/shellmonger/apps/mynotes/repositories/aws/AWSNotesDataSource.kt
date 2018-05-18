@@ -155,7 +155,7 @@ class AWSNotesDataSource(context: Context, idService: IdentityService) : PageKey
         }
 
         appSyncClient.query(query)
-                .responseFetcher(AppSyncResponseFetchers.NETWORK_ONLY)
+                .responseFetcher(AppSyncResponseFetchers.CACHE_FIRST)
                 .enqueue(graphqlCallback)
     }
 
@@ -178,6 +178,7 @@ class AWSNotesDataSource(context: Context, idService: IdentityService) : PageKey
                             title = it.title() ?: ""
                             content = it.content() ?: ""
                         }
+
                         invalidate()
                         callback(note)
                     }
@@ -189,7 +190,9 @@ class AWSNotesDataSource(context: Context, idService: IdentityService) : PageKey
             }
         }
 
-        appSyncClient.mutate(mutation).enqueue(graphqlCallback)
+        appSyncClient.mutate(mutation)
+                .refetchQueries(GetNoteQuery.builder().noteId(item.noteId).build())
+                .enqueue(graphqlCallback)
     }
 
     fun deleteItem(item: Note, callback: () -> Unit) {
@@ -214,7 +217,8 @@ class AWSNotesDataSource(context: Context, idService: IdentityService) : PageKey
             }
         }
 
-        appSyncClient.mutate(mutation).enqueue(graphqlCallback)
+        appSyncClient.mutate(mutation)
+                .enqueue(graphqlCallback)
     }
 }
 
