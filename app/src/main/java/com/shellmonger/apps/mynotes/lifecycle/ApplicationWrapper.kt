@@ -3,6 +3,8 @@ package com.shellmonger.apps.mynotes.lifecycle
 import android.app.Application
 import com.shellmonger.apps.mynotes.repositories.mock.MockNotesRepository
 import com.shellmonger.apps.mynotes.repositories.NotesRepository
+import com.shellmonger.apps.mynotes.repositories.aws.AWSNotesDataSource
+import com.shellmonger.apps.mynotes.repositories.aws.AWSNotesRepository
 import com.shellmonger.apps.mynotes.services.AnalyticsService
 import com.shellmonger.apps.mynotes.services.IdentityService
 import com.shellmonger.apps.mynotes.services.aws.AWSAnalyticsService
@@ -24,15 +26,12 @@ import org.koin.dsl.module.applicationContext
 class ApplicationWrapper : Application() {
     companion object {
         private val services : Module = applicationContext {
-//            bean { MockAnalyticsService() as AnalyticsService }
             bean { AWSAnalyticsService(get()) as AnalyticsService }
-
-//            bean { MockIdentityService(get()) as IdentityService }
             bean { AWSIdentityService(get()) as IdentityService }
         }
 
         private val repositories : Module = applicationContext {
-            bean { MockNotesRepository(get()) as NotesRepository }
+            bean { AWSNotesRepository(get(), get(), get()) as NotesRepository }
         }
         private val viewModels : Module = applicationContext {
             viewModel { AuthenticatorActivityViewModel(get()) }

@@ -42,8 +42,10 @@ class NoteListActivity : AppCompatActivity() {
         }
         note_list_recyclerview.adapter = adapter
         val itemTouchHelper = ItemTouchHelper(SwipeToDeleteHandler(this) {
-            it.note?.let { viewModel.deleteNote(it) }
-            adapter.notifyItemRemoved(it.adapterPosition)
+            val position = it.adapterPosition
+            it.note?.let {
+                viewModel.deleteNote(it) { adapter.notifyItemRemoved(position) }
+            }
         })
         itemTouchHelper.attachToRecyclerView(note_list_recyclerview)
     }

@@ -86,7 +86,7 @@ Resources:
       UserPoolName: !Sub ${APIName}-user-pool
       AutoVerifiedAttributes:
         - phone_number
-      MfaConfiguration: "ON"
+      MfaConfiguration: "OFF"
       SmsConfiguration:
         ExternalId: !Sub ${APIName}-external
         SnsCallerArn: !GetAtt SNSRole.Arn
@@ -112,20 +112,28 @@ Resources:
       GenerateSecret: true
       UserPoolId: !Ref UserPool
 
+  UserPoolConsoleClient:
+    Type: "AWS::Cognito::UserPoolClient"
+    Description: "App Client used to work with queries in AWS AppSync console"
+    Properties:
+      ClientName: !Sub ${APIName}-appsync-console-client
+      GenerateSecret: false
+      UserPoolId: !Ref UserPool
+
   DynamoDBNotesTable:
     Type: "AWS::DynamoDB::Table"
     Description: "Data store for AWS AppSync Notes Type"
     Properties:
       TableName: !Sub ${APIName}-notes-table
       AttributeDefinitions:
-        - AttributeName: "noteId"
-          AttributeType: "S"
         - AttributeName: "userId"
+          AttributeType: "S"
+        - AttributeName: "noteId"
           AttributeType: "S"
       KeySchema:
-        - AttributeName: "noteId"
-          KeyType: "HASH"
         - AttributeName: "userId"
+          KeyType: "HASH"
+        - AttributeName: "noteId"
           KeyType: "RANGE"
       ProvisionedThroughput:
         ReadCapacityUnits: 5
@@ -138,7 +146,7 @@ Resources:
       AuthenticationType: "AMAZON_COGNITO_USER_POOLS"
       Name: !Sub ${APIName}
       UserPoolConfig:
-        UserPoolId: !Ref UserPoolClient
+        UserPoolId: !Ref UserPool
         AwsRegion: !Sub ${AWS::Region}
         DefaultAction: "ALLOW"
 
@@ -194,7 +202,7 @@ Resources:
           "version": "2017-02-28",
           "operation": "Query",
           "query": {
-            "expression": "UserId = :id",
+            "expression": "userId = :id",
             "expressionValues": {
               ":id": $util.dynamodb.toDynamoDBJson($ctx.identity.sub)
             }
@@ -218,7 +226,7 @@ Resources:
       DataSourceName: !GetAtt AppSyncNotesTableDataSource.Name
       RequestMappingTemplate: |
         {
-          "version": "2012-02-28",
+          "version": "2017-02-28",
           "operation": "GetItem",
           "key": {
             "noteId": $util.dynamodb.toDynamoDBJson($ctx.args.noteId),
@@ -237,7 +245,7 @@ Resources:
       DataSourceName: !GetAtt AppSyncNotesTableDataSource.Name
       RequestMappingTemplate: |
         {
-          "version": "2012-02-28",
+          "version": "2017-02-28",
           "operation": "PutItem",
           "key": {
             "noteId": $util.dynamodb.toDynamoDBJson($ctx.args.noteId),
@@ -260,7 +268,7 @@ Resources:
       DataSourceName: !GetAtt AppSyncNotesTableDataSource.Name
       RequestMappingTemplate: |
         {
-          "version": "2012-02-28",
+          "version": "2017-02-28",
           "operation": "DeleteItem",
           "key": {
             "noteId": $util.dynamodb.toDynamoDBJson($ctx.args.noteId),

@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.amazonaws.appsync'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 27
@@ -71,6 +73,7 @@ dependencies {
     implementation "com.amazonaws:aws-android-sdk-auth-core:$aws_version"
     implementation "com.amazonaws:aws-android-sdk-auth-userpools:$aws_version"
     implementation "com.amazonaws:aws-android-sdk-pinpoint:$aws_version"
+    implementation "com.amazonaws:aws-android-sdk-appsync:$appsync_version"
 
     // Test Libraries
     testImplementation 'junit:junit:4.12'

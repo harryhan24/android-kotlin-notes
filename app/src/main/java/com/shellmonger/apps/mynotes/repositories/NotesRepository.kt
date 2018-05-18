@@ -7,9 +7,9 @@ import com.shellmonger.apps.mynotes.models.Note
 interface NotesRepository {
     val notes: LiveData<PagedList<Note>>
 
-    fun getNoteById(noteId: String): Note?
+    fun getNoteById(noteId: String, callback: (Note?) -> Unit)
 
-    fun saveNote(item: Note)
+    fun saveNote(item: Note, callback: (Note) -> Unit)
 
-    fun deleteNote(item: Note)
+    fun deleteNote(item: Note, callback: () -> Unit)
 }

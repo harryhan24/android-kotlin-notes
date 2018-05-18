@@ -14,6 +14,7 @@ class NoteDetailViewModel(private val repository: NotesRepository) : ViewModel()
     }
 
     private val mutableNoteId: MutableLiveData<String?> = MutableLiveData()
+    val mutableCurrentNote: MutableLiveData<Note> = MutableLiveData()
     val currentNote: LiveData<Note>
 
 
@@ -23,8 +24,13 @@ class NoteDetailViewModel(private val repository: NotesRepository) : ViewModel()
 
     private fun loadNote(noteId: String?): LiveData<Note> {
         Log.d(TAG, "Loading note")
-        val note: Note = if (noteId == null) Note() else repository.getNoteById(noteId) ?: Note()
-        return MutableLiveData<Note>().apply { postValue(note) }
+        if (noteId == null) {
+            mutableCurrentNote.postValue(Note())
+            return mutableCurrentNote
+        } else {
+            repository.getNoteById(noteId) { mutableCurrentNote.postValue(it ?: Note()) }
+            return mutableCurrentNote
+        }
     }
 
     fun setNoteId(noteId: String) {
@@ -34,7 +40,8 @@ class NoteDetailViewModel(private val repository: NotesRepository) : ViewModel()
 
     fun saveNote(item: Note) {
         Log.d(TAG, "Saving note ${item.noteId}")
-        repository.saveNote(item)
-        if (mutableNoteId.value != item.noteId) setNoteId(item.noteId)
+        repository.saveNote(item) {
+            if (mutableNoteId.value != item.noteId) setNoteId(item.noteId)
+        }
     }
 }

@@ -2,13 +2,15 @@
 
 buildscript {
     ext.kotlin_version = '1.2.41'
+    ext.appsync_version = '2.6.17'
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0-alpha14'
+        classpath 'com.android.tools.build:gradle:3.2.0-alpha15'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "com.amazonaws:aws-android-sdk-appsync-gradle-plugin:$appsync_version"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

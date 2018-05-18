@@ -82,23 +82,25 @@ class MockNotesDataSource : ItemKeyedDataSource<Int, Note>() {
     /**
      * Obtain an item based on the ID
      */
-    fun getNoteById(noteId: String): Note?
-            = items.first { it.noteId == noteId }
+    fun getNoteById(noteId: String, callback: (Note?) -> Unit) {
+        callback(items.first { it.noteId == noteId })
+    }
 
     /**
      * Save a new item to the list
      */
-    fun saveItem(item: Note) {
+    fun saveItem(item: Note, callback: (Note) -> Unit) {
         Log.d(TAG, "Saving item ${item.noteId}")
         val index = getKey(item)
         if (index < 0) items.add(item) else items[index] = item
         invalidate()        // Tell the system the data has changed
+        callback(item)      // Callback to tell the UI that it's been successfully saved
     }
 
     /**
      * delete an item from the list
      */
-    fun deleteItem(item: Note) {
+    fun deleteItem(item: Note, callback: () -> Unit) {
         val index = getKey(item)
         Log.d(TAG, "There are now ${items.size} items (index = $index)")
         if (index >= 0) {
@@ -109,15 +111,11 @@ class MockNotesDataSource : ItemKeyedDataSource<Int, Note>() {
         } else {
             Log.d(TAG, "Item ${item.noteId} not found for deletion")
         }
+        callback()
     }
 }
 
 class MockNotesDataSourceFactory : DataSource.Factory<Int,Note>() {
-    companion object {
-        private val TAG = this::class.java.simpleName
-    }
-
     val dataSource = MockNotesDataSource()
-
     override fun create(): DataSource<Int, Note> = dataSource
 }

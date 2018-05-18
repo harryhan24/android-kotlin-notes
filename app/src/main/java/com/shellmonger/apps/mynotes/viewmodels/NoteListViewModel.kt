@@ -7,7 +7,7 @@ import com.shellmonger.apps.mynotes.repositories.NotesRepository
 class NoteListViewModel(private val repository: NotesRepository) : ViewModel() {
     val notes = repository.notes
 
-    fun deleteNote(item: Note) {
-        repository.deleteNote(item)
+    fun deleteNote(item: Note, callback: () -> Unit) {
+        repository.deleteNote(item, callback)
     }
 }

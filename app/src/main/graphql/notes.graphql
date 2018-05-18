@@ -1,0 +1,31 @@
+query GetNote($noteId: ID!) {
+  getNote(noteId: $noteId) {
+    noteId
+    title
+    content
+  }
+}
+
+query AllNotes($limit: Int, $nextToken: String) {
+  allNotes(limit: $limit, nextToken: $nextToken) {
+    notes {
+      noteId
+      title
+    }
+    nextToken
+  }
+}
+
+mutation SaveNote($noteId: ID!, $title: String!, $content: String!) {
+  saveNote(noteId: $noteId, title: $title, content: $content) {
+    noteId
+    title
+    content
+  }
+}
+
+mutation DeleteNote($noteId: ID!) {
+  deleteNote(noteId: $noteId) {
+    noteId
+  }
+}

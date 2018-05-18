@@ -27,7 +27,7 @@ class AWSIdentityService(context: Context) : IdentityService {
     private val mutableCurrentUser: MutableLiveData<User> = MutableLiveData()
     private val mutableStoredUsername: MutableLiveData<String?> = MutableLiveData()
     private val sharedPreferences = context.getSharedPreferences(PREFS_FILE, Context.MODE_PRIVATE)
-    private val userPool: CognitoUserPool
+    val userPool: CognitoUserPool
 
     init {
         Log.d(TAG, "init")
