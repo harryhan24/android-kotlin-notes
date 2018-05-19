@@ -35,7 +35,7 @@ class NoteDetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            if (it.containsKey(ARG_NOTE)) viewModel.setNoteId(it.getString(ARG_NOTE))
+            if (it.containsKey(ARG_NOTE)) viewModel.loadNote(it.getString(ARG_NOTE))
         }
     }
 

@@ -13,35 +13,19 @@ class NoteDetailViewModel(private val repository: NotesRepository) : ViewModel()
         private val TAG = this::class.java.simpleName
     }
 
-    private val mutableNoteId: MutableLiveData<String?> = MutableLiveData()
-    val mutableCurrentNote: MutableLiveData<Note> = MutableLiveData()
-    val currentNote: LiveData<Note>
+    private val mCurrentNote: MutableLiveData<Note> = MutableLiveData()
+    val currentNote: LiveData<Note> = mCurrentNote
 
-
-    init {
-        currentNote = Transformations.switchMap(mutableNoteId, { loadNote(it) })
-    }
-
-    private fun loadNote(noteId: String?): LiveData<Note> {
-        Log.d(TAG, "Loading note")
-        if (noteId == null) {
-            mutableCurrentNote.postValue(Note())
-            return mutableCurrentNote
-        } else {
-            repository.getNoteById(noteId) { mutableCurrentNote.postValue(it ?: Note()) }
-            return mutableCurrentNote
+    fun loadNote(noteId: String) {
+        repository.getNoteById(noteId) {
+            mCurrentNote.postValue(it)
         }
-    }
-
-    fun setNoteId(noteId: String) {
-        Log.d(TAG, "NoteDetail of $noteId requested")
-        mutableNoteId.postValue(noteId)
     }
 
     fun saveNote(item: Note) {
         Log.d(TAG, "Saving note ${item.noteId}")
         repository.saveNote(item) {
-            if (mutableNoteId.value != item.noteId) setNoteId(item.noteId)
+            /* Do nothing */
         }
     }
 }
