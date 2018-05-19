@@ -155,7 +155,7 @@ class AWSNotesDataSource(context: Context, idService: IdentityService) : PageKey
         }
 
         appSyncClient.query(query)
-                .responseFetcher(AppSyncResponseFetchers.CACHE_FIRST)
+                .responseFetcher(AppSyncResponseFetchers.NETWORK_ONLY)
                 .enqueue(graphqlCallback)
     }
 
