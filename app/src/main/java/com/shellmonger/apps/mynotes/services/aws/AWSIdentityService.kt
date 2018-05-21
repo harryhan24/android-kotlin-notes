@@ -174,9 +174,6 @@ class AWSIdentityService(context: Context) : IdentityService {
                                 val password = response["password"] ?: ""
                                 check(username.isNotEmpty()) { "Username is empty" }
                                 check(password.isNotEmpty()) { "Password is empty" }
-
-
-
                                 continuation.setAuthenticationDetails(AuthenticationDetails(username, password, null))
                                 continuation.continueTask()
                             }

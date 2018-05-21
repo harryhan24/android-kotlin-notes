@@ -2,10 +2,12 @@
 
 buildscript {
     ext.kotlin_version = '1.2.41'
-    ext.appsync_version = '2.6.17'
+    ext.appsync_version = '2.6.19'
     repositories {
         google()
         jcenter()
+        maven { url "https://oss.sonatype.org/content/repositories/comamazonaws-3760" }
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.0-alpha15'
@@ -21,6 +23,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url "https://oss.sonatype.org/content/repositories/comamazonaws-3760" }
     }
 }
 

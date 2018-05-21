@@ -18,8 +18,12 @@ class NoteDetailViewModel(private val repository: NotesRepository) : ViewModel()
 
     fun loadNote(noteId: String) {
         repository.getNoteById(noteId) {
-            mCurrentNote.postValue(it)
+            mCurrentNote.postValue(it ?: Note())
         }
+    }
+
+    fun newNote() {
+        mCurrentNote.postValue(Note())
     }
 
     fun saveNote(item: Note) {

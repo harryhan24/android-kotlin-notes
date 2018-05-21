@@ -110,7 +110,6 @@ class AuthenticatorActivity : AppCompatActivity() {
 
                 IdentityRequest.SUCCESS -> {
                     viewModel.updateStoredUsername(authenticator_username.text.toString())
-                    Thread.sleep(1000)
                     startActivity(Intent(this@AuthenticatorActivity, NoteListActivity::class.java))
                 }
 

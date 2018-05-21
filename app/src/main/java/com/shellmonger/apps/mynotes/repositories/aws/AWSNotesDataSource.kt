@@ -4,6 +4,7 @@ import android.arch.paging.DataSource
 import android.arch.paging.PageKeyedDataSource
 import android.content.Context
 import android.util.Log
+import com.amazonaws.mobile.auth.core.internal.util.ThreadUtils.runOnUiThread
 import com.amazonaws.mobile.config.AWSConfiguration
 import com.amazonaws.mobileconnectors.appsync.AWSAppSyncClient
 import com.amazonaws.mobileconnectors.appsync.fetcher.AppSyncResponseFetchers
@@ -25,33 +26,17 @@ class AWSNotesDataSource(context: Context, idService: IdentityService) : PageKey
     }
 
     private val appSyncClient: AWSAppSyncClient
-    private val okHttpClient: OkHttpClient
 
     init {
         val configProvider = AWSConfiguration(context)
         val appSyncConfig = configProvider.optJsonObject("AppSync")
         val cognitoUserPool = (idService as AWSIdentityService).userPool
 
-        okHttpClient = OkHttpClient.Builder()
-                .addInterceptor(Interceptor { chain ->
-                    Log.d(TAG, "In interceptor")
-                    val request = chain.request()
-                    val response = chain.proceed(request)
-                    Log.d(TAG, "Response received")
-                    if (!response.isSuccessful) {
-                        Log.d(TAG, "Response was not successful")
-                    }
-                    return@Interceptor response
-                })
-                .build()
-
-
         appSyncClient = AWSAppSyncClient.builder()
                 .context(context)
                 .region(Regions.fromName(appSyncConfig.getString("region")))
                 .cognitoUserPoolsAuthProvider(BasicCognitoUserPoolsAuthProvider(cognitoUserPool))
                 .serverUrl(appSyncConfig.getString("graphqlEndpoint"))
-                .okHttpClient(okHttpClient)
                 .build()
     }
 
@@ -163,8 +148,8 @@ class AWSNotesDataSource(context: Context, idService: IdentityService) : PageKey
         Log.d(TAG, "Saving ite ${item.noteId}")
         val mutation = SaveNoteMutation.builder()
                 .noteId(item.noteId)
-                .title(if (item.title == "") " " else item.title)
-                .content(if (item.content == "") " " else item.content)
+                .title(if (item.title.isBlank()) " " else item.title)
+                .content(if (item.content.isBlank()) " " else item.content)
                 .build()
 
         val graphqlCallback = object : GraphQLCall.Callback<SaveNoteMutation.Data>() {
@@ -180,7 +165,7 @@ class AWSNotesDataSource(context: Context, idService: IdentityService) : PageKey
                         }
 
                         invalidate()
-                        callback(note)
+                        runOnUiThread { callback(note) }
                     }
                 }
             }
@@ -208,7 +193,7 @@ class AWSNotesDataSource(context: Context, idService: IdentityService) : PageKey
                 } else {
                     Log.d(TAG, "deleteItem::onResponse - data received")
                     invalidate()
-                    callback()
+                    runOnUiThread { callback() }
                 }
             }
 

@@ -25,7 +25,7 @@ class NoteDetailFragment : Fragment() {
 
     private val viewModel by viewModel<NoteDetailViewModel>()
     private val observer = Observer<Note> {
-        it?.let {
+        if (it != null) {
             detail_id_field.text = it.noteId
             detail_title_editor.text.set(it.title)
             detail_content_editor.text.set(it.content)
@@ -34,9 +34,14 @@ class NoteDetailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        var isLoaded = false
         arguments?.let {
-            if (it.containsKey(ARG_NOTE)) viewModel.loadNote(it.getString(ARG_NOTE))
+            if (it.containsKey(ARG_NOTE)) {
+                viewModel.loadNote(it.getString(ARG_NOTE))
+                isLoaded = true
+            }
         }
+        if (!isLoaded) viewModel.newNote()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -55,7 +60,7 @@ class NoteDetailFragment : Fragment() {
 
     private fun saveNote() {
         Log.d(TAG, "Note is being saved")
-        val currentNote = (viewModel.currentNote.value ?: Note()).apply {
+        val currentNote = Note(viewModel.currentNote.value?.noteId!!).apply {
             title = view?.detail_title_editor?.text.toString()
             content = view?.detail_content_editor?.text.toString()
         }
