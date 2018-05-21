@@ -129,6 +129,7 @@ class AWSNotesDataSource(context: Context, idService: IdentityService) : PageKey
                             title = it.title() ?: ""
                             content = it.content() ?: ""
                         }
+                        val store = appSyncClient.store
                         callback(note)
                     }
                 }
@@ -176,7 +177,6 @@ class AWSNotesDataSource(context: Context, idService: IdentityService) : PageKey
         }
 
         appSyncClient.mutate(mutation)
-                .refetchQueries(GetNoteQuery.builder().noteId(item.noteId).build())
                 .enqueue(graphqlCallback)
     }
 
