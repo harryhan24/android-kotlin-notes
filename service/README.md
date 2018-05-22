@@ -47,7 +47,57 @@ Again, use the right template URL
 ## Generate the awsconfiguration.json file
 
 Use the resources to generate a suitable awsconfiguration.json - you will need
-to use the `aws cloudformation describe-stack-resources` to get the list of resources, then individual aws commands.
+to use the `aws cloudformation describe-stack-resources` to get the list of resources, then
+individual aws commands.
 
-... Or use my script.
+You can also use the `aws cloudformation describe-stack --stack-name notes-app` to get the
+list of outputs.  Use these to generate a suitable awsconfiguration.json file.
+
+Example awsconfiguration.conf file:
+
+```json
+{
+  "UserAgent": "MobileHub/1.0",
+  "Version": "1.0",
+  "CredentialsProvider": {
+    "CognitoIdentity": {
+      "Default": {
+        "PoolId": "us-east-1:guid",
+        "Region": "us-east-1"
+      }
+    }
+  },
+  "IdentityManager": {
+    "Default": {}
+  },
+  "PinpointAnalytics": {
+    "Default": {
+      "AppId": "hex-number",
+      "Region": "us-east-1"
+    }
+  },
+  "PinpointTargeting": {
+    "Default": {
+      "Region": "us-east-1"
+    }
+  }
+  "CognitoUserPool": {
+    "Default": {
+      "UserPoolId": "us-east-1_sometext",
+      "AppClientId": "hex-number",
+      "AppClientSecret": "random-text",
+      "Region": "us-east-1"
+    }
+  },
+  "AppSync": {
+    "Default": {
+      "graphqlEndpoint": "https://url/graphql",
+      "authenticationType": "AMAZON_COGNITO_USER_POOL",
+      "region": "us-east-1"
+    }
+  }
+}
+```
+
+Place the awsconfiguration.json file in the `res/raw` resource directory.
 
